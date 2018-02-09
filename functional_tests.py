@@ -30,9 +30,19 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(any(row.text == '1: Buy this crazy thing' for row in rows),
-            "New todo item is not appearing in the table"
-            )
+        self.assertIn('1: Buy this crazy thing', [row.text for row in rows])
+
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        #enter a second new to do
+        inputbox.send_keys('Buy a second thing')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Buy this crazy thing', [row.text for row in rows])
+        self.assertIn('1: Buy a second thing', [row.text for row in rows])
+
 
 
 if __name__ == '__main__':
